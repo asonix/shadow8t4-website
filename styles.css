@@ -1,0 +1,177 @@
+body {
+    background-color: #ffffff;
+    margin: 0;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 50px;
+    z-index: 1;
+    color: #999999;
+    background-color: #292929;
+    border-color: #101010;
+    border-style: solid;
+    border-width: 0;
+    border-bottom-width: 1px;
+}
+
+nav {
+    margin: 0 auto;
+    height: 100%;
+}
+
+nav ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+nav > ul {
+    margin: 0;
+    display: flex;
+    height: 100%;
+}
+
+nav > ul > li {
+    margin: 0;
+    text-align: center;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+    supported by Chrome and Opera */
+}
+
+nav > ul > li:hover,
+nav > ul > li .dropdown-active {
+    color: #ffffff;
+    background-color: #2266ff;
+    border-color: #2266ff;
+    border-style: solid;
+    border-width: 0;
+    border-bottom-width: 1px;
+    margin-bottom: -1px;
+}
+
+nav > ul > li .button-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    cursor: pointer;
+}
+
+nav > ul > li .button-wrapper > p {
+    margin: 0;
+    padding: 0 1em;
+}
+
+nav > ul > li.home-item .button-wrapper > p {
+    font-weight: lighter;
+}
+
+nav > ul > li.nav-item .button-wrapper > p {
+    font-weight: bold;
+    font-size: smaller;
+}
+
+nav > ul > li .dropdown {
+    text-align: left;
+    min-width: 10em;
+    color: #292929;
+    background-color: #ffffff;
+    border-bottom: 1px solid #999;
+}
+
+nav > ul > li .dropdown {
+    margin-top: 1px;
+}
+
+nav > ul > li .dropdown,
+nav > ul > li ul.dropdown > li.sub-item:last-child > p {
+    border-bottom-left-radius: 0.4em;
+    border-bottom-right-radius: 0.4em;
+}
+
+nav > ul > li .dropdown li.sub-item {
+    cursor: pointer;
+}
+
+nav > ul > li .dropdown li.sub-item > p {
+    margin: 0;
+    padding: 0.4em 1em;
+    font-size: smaller;
+}
+
+nav > ul > li .dropdown li.sub-item > p:hover {
+    color: #ffffff;
+    background-color: #2266ff;
+}
+
+.welcome {
+    background-color: #444444;
+    background-image: url('assets/TorielArtwork.jpg');
+    background-size: cover;
+    position: relative;
+    z-index: 0;
+    height: 100vh;
+    max-height: 500px;
+}
+
+.welcome .welcome-wrapper {
+    padding-top: 51px;
+}
+
+.welcome .dimmer {
+    opacity: 0.7;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.welcome .centered {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.welcome .content {
+    padding: 0.5em 1em;
+}
+
+.welcome .content h1 {
+    font-size: 3em;
+}
+
+.welcome .content p {
+    padding: 0.5em 0;
+    font-size: 1.2em;
+}
+
+.welcome .content h1,
+.welcome .content p {
+    margin: 0;
+}
+
+@media (min-width: 930px) {
+    nav {
+        width: 900px;
+    }
+
+    .welcome .centered {
+        width: 900px;
+    }
+}
+
+@media (min-width: 1200px) {
+    nav {
+        width: 1170px;
+    }
+
+    .welcome .centered {
+        width: 1170px;
+    }
+}
+
