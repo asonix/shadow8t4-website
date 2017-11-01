@@ -42,6 +42,7 @@ type alias Model =
 
 type NavItem
     = HomeLink String String
+    | InitDropdown String (Array NavItem)
     | Dropdown String DropdownConfig (Array NavItem)
     | NavLink String String
 
@@ -63,12 +64,11 @@ init : ( Model, Cmd Msg )
 init =
     ( { tmp = "Hewwo!"
       , nav =
-            Array.fromList
+            initDropdowns
                 [ HomeLink "Home" "/"
-                , Dropdown
+                , InitDropdown
                     "Social Media"
-                    (dropdownConfigOne 1)
-                    (Array.fromList
+                    (initDropdowns
                         [ NavLink "Tumblr" "/"
                         , NavLink "Facebook" "/"
                         , NavLink "YouTube" "/"
@@ -79,20 +79,57 @@ init =
                 , NavLink "AskBox" "/"
                 , NavLink "Submit" "/"
                 , NavLink "Me" "/"
+                , InitDropdown
+                    "Test"
+                    (initDropdowns
+                        [ NavLink "One" "/"
+                        , NavLink "Two" "/"
+                        ]
+                    )
                 ]
       }
     , Cmd.none
     )
 
 
-dropdownConfigOne : Int -> DropdownConfig
-dropdownConfigOne index =
-    { name = "dropdown"
+defaultDropdownConfig : DropdownConfig
+defaultDropdownConfig =
+    { name = "dropdown1"
     , event = OnClick
     , attribute = class "dropdown"
     , state = False
-    , message = ToggleDropdown index
+    , message = ToggleDropdown 0
     }
+
+
+initDropdown : Int -> NavItem -> NavItem
+initDropdown index item =
+    case item of
+        Dropdown name config items ->
+            Dropdown
+                name
+                { config
+                    | name = "dropdown" ++ (toString index)
+                    , message = ToggleDropdown index
+                }
+                items
+
+        InitDropdown name items ->
+            Dropdown
+                name
+                { defaultDropdownConfig
+                    | name = "dropdown" ++ (toString index)
+                    , message = ToggleDropdown index
+                }
+                items
+
+        other ->
+            other
+
+
+initDropdowns : List NavItem -> Array NavItem
+initDropdowns =
+    Array.indexedMap initDropdown << Array.fromList
 
 
 
@@ -139,9 +176,10 @@ homeLink : String -> String -> Html Msg
 homeLink name url =
     li [ class "home-item" ]
         [ div []
-            [ div [ class "button-wrapper" ]
-                [ p []
-                    [ text name ]
+            [ a [ class "nav-link", href url ]
+                [ div [ class "button-wrapper" ]
+                    [ p [] [ text name ]
+                    ]
                 ]
             ]
         ]
@@ -159,14 +197,18 @@ navItem item =
         HomeLink name url ->
             homeLink name url
 
+        _ ->
+            text ""
+
 
 navLink : String -> String -> Html Msg
 navLink name url =
     li [ class "nav-item" ]
         [ div []
-            [ div [ class "button-wrapper" ]
-                [ p []
-                    [ text name ]
+            [ a [ class "nav-link", href url ]
+                [ div [ class "button-wrapper" ]
+                    [ p [] [ text name ]
+                    ]
                 ]
             ]
         ]
@@ -184,8 +226,7 @@ navDropdown name config items =
                  else
                     [ class "button-wrapper" ]
                 )
-                [ p []
-                    [ text name ]
+                [ p [] [ text name ]
                 ]
             )
             (drawer ul [ class "dropdown" ] (Array.map subItem items |> Array.toList))
@@ -197,8 +238,9 @@ subItem item =
     case item of
         NavLink name url ->
             li [ class "sub-item" ]
-                [ p []
-                    [ text name ]
+                [ a [ class "nav-link", href url ]
+                    [ p [] [ text name ]
+                    ]
                 ]
 
         _ ->

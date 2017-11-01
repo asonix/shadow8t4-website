@@ -19,6 +19,7 @@ header {
 }
 
 nav {
+    background-color: #292929;
     margin: 0 auto;
     height: 100%;
 }
@@ -29,6 +30,7 @@ nav ul {
 }
 
 nav > ul {
+    background-color: #292929;
     margin: 0;
     display: flex;
     height: 100%;
@@ -65,16 +67,22 @@ nav > ul > li .button-wrapper {
     cursor: pointer;
 }
 
-nav > ul > li .button-wrapper > p {
+nav > ul > li .button-wrapper p {
     margin: 0;
     padding: 0 1em;
 }
 
-nav > ul > li.home-item .button-wrapper > p {
+nav > ul > li .nav-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+nav > ul > li.home-item .button-wrapper p {
     font-weight: lighter;
 }
 
-nav > ul > li.nav-item .button-wrapper > p {
+nav > ul > li.nav-item .button-wrapper p {
     font-weight: bold;
     font-size: smaller;
 }
@@ -92,7 +100,7 @@ nav > ul > li .dropdown {
 }
 
 nav > ul > li .dropdown,
-nav > ul > li ul.dropdown > li.sub-item:last-child > p {
+nav > ul > li ul.dropdown > li.sub-item:last-child p {
     border-bottom-left-radius: 0.4em;
     border-bottom-right-radius: 0.4em;
 }
@@ -101,13 +109,13 @@ nav > ul > li .dropdown li.sub-item {
     cursor: pointer;
 }
 
-nav > ul > li .dropdown li.sub-item > p {
+nav > ul > li .dropdown li.sub-item p {
     margin: 0;
     padding: 0.4em 1em;
     font-size: smaller;
 }
 
-nav > ul > li .dropdown li.sub-item > p:hover {
+nav > ul > li .dropdown li.sub-item p:hover {
     color: #ffffff;
     background-color: #2266ff;
 }
