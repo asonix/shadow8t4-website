@@ -9,8 +9,9 @@ module Main exposing (main)
 
 -}
 
-import Html exposing (Html, a, button, div, h1, header, li, nav, node, p, program, text, ul)
+import Html exposing (Attribute, Html, a, button, div, h1, header, li, nav, node, p, program, text, ul)
 import Html.Attributes exposing (class, href, rel)
+import Array exposing (Array)
 import Dropdown exposing (ToggleEvent(..), drawer, dropdown, toggle)
 
 
@@ -35,7 +36,22 @@ main =
 
 type alias Model =
     { tmp : String
-    , dropdown : Dropdown.State
+    , nav : Array NavItem
+    }
+
+
+type NavItem
+    = HomeLink String String
+    | Dropdown String DropdownConfig (Array NavItem)
+    | NavLink String String
+
+
+type alias DropdownConfig =
+    { name : String
+    , event : ToggleEvent
+    , attribute : Attribute Msg
+    , state : Dropdown.State
+    , message : Bool -> Msg
     }
 
 
@@ -46,10 +62,37 @@ type alias Model =
 init : ( Model, Cmd Msg )
 init =
     ( { tmp = "Hewwo!"
-      , dropdown = False
+      , nav =
+            Array.fromList
+                [ HomeLink "Home" "/"
+                , Dropdown
+                    "Social Media"
+                    (dropdownConfigOne 1)
+                    (Array.fromList
+                        [ NavLink "Tumblr" "/"
+                        , NavLink "Facebook" "/"
+                        , NavLink "YouTube" "/"
+                        , NavLink "Instagram" "/"
+                        , NavLink "Google+" "/"
+                        ]
+                    )
+                , NavLink "AskBox" "/"
+                , NavLink "Submit" "/"
+                , NavLink "Me" "/"
+                ]
       }
     , Cmd.none
     )
+
+
+dropdownConfigOne : Int -> DropdownConfig
+dropdownConfigOne index =
+    { name = "dropdown"
+    , event = OnClick
+    , attribute = class "dropdown"
+    , state = False
+    , message = ToggleDropdown index
+    }
 
 
 
@@ -87,55 +130,13 @@ headerBar : Model -> Html Msg
 headerBar model =
     header []
         [ nav []
-            [ ul []
-                [ homeItem "Home"
-                , navItemDropdown model
-                , navItem "ASKBOX"
-                , navItem "SUBMIT"
-                , navItem "ME"
-                ]
+            [ ul [] (Array.map navItem model.nav |> Array.toList)
             ]
         ]
 
 
-navItemDropdown : Model -> Html Msg
-navItemDropdown model =
-    li [ class "nav-item" ]
-        [ dropdown
-            model.dropdown
-            dropdownConfig
-            (toggle div
-                (if model.dropdown then
-                    [ class "dropdown-active", class "button-wrapper" ]
-                 else
-                    [ class "button-wrapper" ]
-                )
-                [ p []
-                    [ text "SOCIAL MEDIA" ]
-                ]
-            )
-            (drawer ul
-                [ class "dropdown" ]
-                [ subItem "Tumblr"
-                , subItem "Facebook"
-                , subItem "YouTube"
-                , subItem "Instagram"
-                , subItem "Google+"
-                ]
-            )
-        ]
-
-
-subItem : String -> Html Msg
-subItem name =
-    li [ class "sub-item" ]
-        [ p []
-            [ text name ]
-        ]
-
-
-homeItem : String -> Html Msg
-homeItem name =
+homeLink : String -> String -> Html Msg
+homeLink name url =
     li [ class "home-item" ]
         [ div []
             [ div [ class "button-wrapper" ]
@@ -146,8 +147,21 @@ homeItem name =
         ]
 
 
-navItem : String -> Html Msg
-navItem name =
+navItem : NavItem -> Html Msg
+navItem item =
+    case item of
+        NavLink name url ->
+            navLink name url
+
+        Dropdown name config items ->
+            navDropdown name config items
+
+        HomeLink name url ->
+            homeLink name url
+
+
+navLink : String -> String -> Html Msg
+navLink name url =
     li [ class "nav-item" ]
         [ div []
             [ div [ class "button-wrapper" ]
@@ -158,13 +172,46 @@ navItem name =
         ]
 
 
-dropdownConfig : Dropdown.Config Msg
-dropdownConfig =
+navDropdown : String -> DropdownConfig -> Array NavItem -> Html Msg
+navDropdown name config items =
+    li [ class "nav-item" ]
+        [ dropdown
+            config.state
+            (dropdownConfig config)
+            (toggle div
+                (if config.state then
+                    [ class "dropdown-active", class "button-wrapper" ]
+                 else
+                    [ class "button-wrapper" ]
+                )
+                [ p []
+                    [ text name ]
+                ]
+            )
+            (drawer ul [ class "dropdown" ] (Array.map subItem items |> Array.toList))
+        ]
+
+
+subItem : NavItem -> Html Msg
+subItem item =
+    case item of
+        NavLink name url ->
+            li [ class "sub-item" ]
+                [ p []
+                    [ text name ]
+                ]
+
+        _ ->
+            text ""
+
+
+dropdownConfig : DropdownConfig -> Dropdown.Config Msg
+dropdownConfig config =
     Dropdown.Config
-        "dropdown"
-        OnClick
-        (class "visible")
-        ToggleDropdown
+        config.name
+        config.event
+        config.attribute
+        config.message
 
 
 
@@ -174,7 +221,7 @@ dropdownConfig =
 type Msg
     = One
     | Two
-    | ToggleDropdown Bool
+    | ToggleDropdown Int Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -190,10 +237,25 @@ update msg model =
             , Cmd.none
             )
 
-        ToggleDropdown newState ->
-            ( { model | dropdown = newState }
+        ToggleDropdown index state ->
+            ( { model | nav = updateDropdown index state model.nav }
             , Cmd.none
             )
+
+
+updateDropdown : Int -> Bool -> Array NavItem -> Array NavItem
+updateDropdown index state navArray =
+    case Array.get index navArray of
+        Just dropdown ->
+            case dropdown of
+                (Dropdown name config items) as dropdown ->
+                    Array.set index (Dropdown name { config | state = state } items) navArray
+
+                _ ->
+                    navArray
+
+        Nothing ->
+            navArray
 
 
 
