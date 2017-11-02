@@ -41,6 +41,7 @@ type alias Model =
     , nav : Array NavItem
     , welcome : WelcomeBanner
     , gallery : Gallery
+    , footer : List FooterSection
     }
 
 
@@ -77,6 +78,14 @@ type alias Gallery =
 type alias GalleryImage =
     { url : String
     , mouseoverText : String
+    }
+
+
+type alias FooterSection =
+    { title : String
+    , description : String
+    , link : String
+    , url : String
     }
 
 
@@ -131,6 +140,23 @@ init =
                 , image "assets/gallery13.png" "me"
                 , image "assets/gallery14.png" "aaaaa"
                 ]
+      , footer =
+            [ initFooterSection
+                "Video Games"
+                "I have an extensive collection and hope to someday go into design maybe."
+                "This link is useless"
+                "/"
+            , initFooterSection
+                "Programming"
+                "I really love to program, probably one of my favorite hobbies, and hopefully someday I'll make it part of my career."
+                "So is this one"
+                "/"
+            , initFooterSection
+                "Music"
+                "\"Music is my life\" is such a 90's thing to say, but it's still true. Wish I could make more time for it."
+                "MEMES THO???"
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            ]
       }
     , Task.perform WindowWidth Window.width
     )
@@ -189,6 +215,11 @@ image url text =
 initGallery : String -> String -> List GalleryImage -> Gallery
 initGallery title description images =
     { title = title, description = description, columns = 4, images = images }
+
+
+initFooterSection : String -> String -> String -> String -> FooterSection
+initFooterSection title description link url =
+    { title = title, description = description, link = link, url = url }
 
 
 
