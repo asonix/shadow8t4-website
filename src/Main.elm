@@ -437,9 +437,9 @@ update msg model =
 
 updateWidth : Int -> Gallery -> Gallery
 updateWidth width gallery =
-    if width < 630 then
+    if width < 632 then
         { gallery | columns = 1 }
-    else if width < 930 then
+    else if width < 932 then
         { gallery | columns = 2 }
     else
         { gallery | columns = 3 }
