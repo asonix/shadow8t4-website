@@ -135,7 +135,7 @@ nav > ul > li .dropdown li.sub-item p:hover {
 
 .welcome {
     background-color: #444444;
-    background-image: url('assets/TorielArtwork.jpg');
+    background-image: url('/assets/images/TorielArtwork.jpg');
     background-size: cover;
     position: relative;
     z-index: 0;
