@@ -9,10 +9,12 @@ module Main exposing (main)
 
 -}
 
-import Html exposing (Attribute, Html, a, button, div, h1, header, li, nav, node, p, program, text, ul)
-import Html.Attributes exposing (class, href, rel)
+import Html exposing (Attribute, Html, a, button, div, h1, h3, header, img, li, nav, node, p, program, text, ul)
+import Html.Attributes exposing (class, href, rel, src, title)
 import Array exposing (Array)
 import Dropdown exposing (ToggleEvent(..), drawer, dropdown, toggle)
+import Window exposing (resizes, width)
+import Task exposing (perform)
 
 
 -- MAIN
@@ -37,6 +39,8 @@ main =
 type alias Model =
     { tmp : String
     , nav : Array NavItem
+    , welcome : WelcomeBanner
+    , gallery : Gallery
     }
 
 
@@ -53,6 +57,26 @@ type alias DropdownConfig =
     , attribute : Attribute Msg
     , state : Dropdown.State
     , message : Bool -> Msg
+    }
+
+
+type alias WelcomeBanner =
+    { title : String
+    , description : String
+    }
+
+
+type alias Gallery =
+    { title : String
+    , description : String
+    , columns : Int
+    , images : List GalleryImage
+    }
+
+
+type alias GalleryImage =
+    { url : String
+    , mouseoverText : String
     }
 
 
@@ -87,8 +111,28 @@ init =
                         ]
                     )
                 ]
+      , welcome = welcomeBanner "Welcome" "What are frogs tho"
+      , gallery =
+            initGallery
+                "Gallery"
+                "Here are some pictures I've taken"
+                [ image "assets/gallery01.jpg" "woah"
+                , image "assets/gallery02.png" "hey"
+                , image "assets/gallery03.png" "why"
+                , image "assets/gallery04.png" "pls"
+                , image "assets/gallery05.png" "i cant"
+                , image "assets/gallery06.png" "stop"
+                , image "assets/gallery07.jpg" "making"
+                , image "assets/gallery08.png" "this"
+                , image "assets/gallery09.jpg" "website"
+                , image "assets/gallery10.png" "dear"
+                , image "assets/gallery11.png" "god"
+                , image "assets/gallery12.png" "help"
+                , image "assets/gallery13.png" "me"
+                , image "assets/gallery14.png" "aaaaa"
+                ]
       }
-    , Cmd.none
+    , Task.perform WindowWidth Window.width
     )
 
 
@@ -132,6 +176,21 @@ initDropdowns =
     Array.indexedMap initDropdown << Array.fromList
 
 
+welcomeBanner : String -> String -> WelcomeBanner
+welcomeBanner title description =
+    { title = title, description = description }
+
+
+image : String -> String -> GalleryImage
+image url text =
+    { url = url, mouseoverText = text }
+
+
+initGallery : String -> String -> List GalleryImage -> Gallery
+initGallery title description images =
+    { title = title, description = description, columns = 4, images = images }
+
+
 
 -- VIEW
 
@@ -140,22 +199,23 @@ view : Model -> Html Msg
 view model =
     div []
         [ headerBar model
-        , welcome model
+        , welcome model.welcome
+        , gallery model.gallery
         , div [ class "tmp" ]
             [ p [] [ text model.tmp ]
             ]
         ]
 
 
-welcome : Model -> Html Msg
-welcome model =
+welcome : WelcomeBanner -> Html Msg
+welcome banner =
     div [ class "welcome" ]
         [ div [ class "welcome-wrapper" ]
             [ div [ class "dimmer" ]
                 [ div [ class "centered" ]
                     [ div [ class "content" ]
-                        [ h1 [ class "title" ] [ text "Welcome" ]
-                        , p [ class "description" ] [ text "What are frogs tho" ]
+                        [ h1 [ class "title" ] [ text banner.title ]
+                        , p [ class "description" ] [ text banner.description ]
                         ]
                     ]
                 ]
@@ -256,6 +316,58 @@ dropdownConfig config =
         config.message
 
 
+gallery : Gallery -> Html Msg
+gallery gallery =
+    let
+        arr : Array (List GalleryImage)
+        arr =
+            gallery.images
+                |> List.indexedMap (\index item -> ( index, item ))
+                |> List.foldl
+                    (\( index, item ) arr ->
+                        if (index % gallery.columns) < Array.length arr then
+                            case
+                                arr
+                                    |> Array.get (index % gallery.columns)
+                                    |> Maybe.map ((::) item)
+                            of
+                                Just column ->
+                                    Array.set (index % gallery.columns) column arr
+
+                                Nothing ->
+                                    arr
+                        else
+                            Array.push [ item ] arr
+                    )
+                    Array.empty
+    in
+        div [ class "gallery" ]
+            [ div [ class "gallery-wrapper" ]
+                [ div [ class "gallery-info" ]
+                    [ h3 [] [ text gallery.title ]
+                    , p [] [ text gallery.description ]
+                    ]
+                , div [ class "gallery-columns" ]
+                    (arr
+                        |> Array.map
+                            (\x ->
+                                div [ class "gallery-column" ]
+                                    (x |> List.reverse |> List.map displayImage)
+                            )
+                        |> Array.toList
+                    )
+                ]
+            ]
+
+
+displayImage : GalleryImage -> Html Msg
+displayImage image =
+    div [ class "gallery-image" ]
+        [ div [ class "gallery-image-wrapper" ]
+            [ img [ src image.url, title image.mouseoverText ] [] ]
+        ]
+
+
 
 -- UPDATE
 
@@ -263,6 +375,7 @@ dropdownConfig config =
 type Msg
     = One
     | Two
+    | WindowWidth Int
     | ToggleDropdown Int Bool
 
 
@@ -279,10 +392,23 @@ update msg model =
             , Cmd.none
             )
 
+        WindowWidth x ->
+            ( { model | gallery = updateWidth x model.gallery }, Cmd.none )
+
         ToggleDropdown index state ->
             ( { model | nav = updateDropdown index state model.nav }
             , Cmd.none
             )
+
+
+updateWidth : Int -> Gallery -> Gallery
+updateWidth width gallery =
+    if width < 630 then
+        { gallery | columns = 1 }
+    else if width < 930 then
+        { gallery | columns = 2 }
+    else
+        { gallery | columns = 3 }
 
 
 updateDropdown : Int -> Bool -> Array NavItem -> Array NavItem
@@ -306,4 +432,4 @@ updateDropdown index state navArray =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Window.resizes (\{ width } -> WindowWidth width)
