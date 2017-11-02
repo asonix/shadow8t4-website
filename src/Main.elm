@@ -9,7 +9,7 @@ module Main exposing (main)
 
 -}
 
-import Html exposing (Attribute, Html, a, button, div, h1, h3, header, img, li, nav, node, p, program, text, ul)
+import Html exposing (Attribute, Html, a, article, button, div, footer, h1, h2, h3, header, img, li, nav, p, program, section, span, text, ul)
 import Html.Attributes exposing (class, href, rel, src, title)
 import Array exposing (Array)
 import Dropdown exposing (ToggleEvent(..), drawer, dropdown, toggle)
@@ -37,8 +37,7 @@ main =
 
 
 type alias Model =
-    { tmp : String
-    , nav : Array NavItem
+    { nav : Array NavItem
     , welcome : WelcomeBanner
     , gallery : Gallery
     , footer : List FooterSection
@@ -95,30 +94,24 @@ type alias FooterSection =
 
 init : ( Model, Cmd Msg )
 init =
-    ( { tmp = "Hewwo!"
-      , nav =
+    ( { nav =
             initDropdowns
                 [ HomeLink "Home" "/"
                 , InitDropdown
                     "Social Media"
                     (initDropdowns
-                        [ NavLink "Tumblr" "/"
-                        , NavLink "Facebook" "/"
-                        , NavLink "YouTube" "/"
-                        , NavLink "Instagram" "/"
-                        , NavLink "Google+" "/"
+                        [ NavLink "Tumblr" "https://shadow8t4.tumblr.com"
+                        , NavLink "Facebook" "https://facebook.com/shadow8t3"
+                        , NavLink "Mastodon" "https://asonix.dog/@shadow8t4"
+                        , NavLink "YouTube" "https://www.youtube.com/channel/UCZAXVnn6i1hcgDjV93HPbzg"
+                        , NavLink "Instagram" "https://instagram.com/shadow8t4"
+                        , NavLink "Google+" "https://plus.google.com/u/2/118253409016956205819"
                         ]
                     )
-                , NavLink "AskBox" "/"
-                , NavLink "Submit" "/"
-                , NavLink "Me" "/"
-                , InitDropdown
-                    "Test"
-                    (initDropdowns
-                        [ NavLink "One" "/"
-                        , NavLink "Two" "/"
-                        ]
-                    )
+                , NavLink "AskBox" "https://shadow8t4.tumblr.com/ask"
+                , NavLink "Submit" "https://shadow8t4.tumblr.ccom/submit"
+                , NavLink "Me" "https://shadow8t4.tumblr.com/tagged/me"
+                , NavLink "Revival Survival" "/revival-survival"
                 ]
       , welcome = welcomeBanner "Welcome" "What are frogs tho"
       , gallery =
@@ -232,19 +225,17 @@ view model =
         [ headerBar model
         , welcome model.welcome
         , gallery model.gallery
-        , div [ class "tmp" ]
-            [ p [] [ text model.tmp ]
-            ]
+        , footerSections model.footer
         ]
 
 
 welcome : WelcomeBanner -> Html Msg
 welcome banner =
-    div [ class "welcome" ]
+    section [ class "welcome" ]
         [ div [ class "welcome-wrapper" ]
             [ div [ class "dimmer" ]
                 [ div [ class "centered" ]
-                    [ div [ class "content" ]
+                    [ article [ class "content" ]
                         [ h1 [ class "title" ] [ text banner.title ]
                         , p [ class "description" ] [ text banner.description ]
                         ]
@@ -317,7 +308,10 @@ navDropdown name config items =
                  else
                     [ class "button-wrapper" ]
                 )
-                [ p [] [ text name ]
+                [ p []
+                    [ text name
+                    , span [ class "carat" ] []
+                    ]
                 ]
             )
             (drawer ul [ class "dropdown" ] (Array.map subItem items |> Array.toList))
@@ -373,9 +367,9 @@ gallery gallery =
                     Array.empty
     in
         div [ class "gallery" ]
-            [ div [ class "gallery-wrapper" ]
-                [ div [ class "gallery-info" ]
-                    [ h3 [] [ text gallery.title ]
+            [ section [ class "gallery-wrapper" ]
+                [ article [ class "gallery-info" ]
+                    [ h2 [] [ text gallery.title ]
                     , p [] [ text gallery.description ]
                     ]
                 , div [ class "gallery-columns" ]
@@ -393,9 +387,30 @@ gallery gallery =
 
 displayImage : GalleryImage -> Html Msg
 displayImage image =
-    div [ class "gallery-image" ]
+    article [ class "gallery-image" ]
         [ div [ class "gallery-image-wrapper" ]
             [ img [ src image.url, title image.mouseoverText ] [] ]
+        ]
+
+
+footerSection : FooterSection -> Html Msg
+footerSection item =
+    div [ class "footer-column" ]
+        [ article [ class "footer-column-wrapper" ]
+            [ h3 [] [ text item.title ]
+            , p [] [ text item.description ]
+            , p []
+                [ a [ href item.url ]
+                    [ text item.link ]
+                ]
+            ]
+        ]
+
+
+footerSections : List FooterSection -> Html Msg
+footerSections items =
+    footer []
+        [ section [ class "footer-wrapper" ] (List.map footerSection items)
         ]
 
 
@@ -404,25 +419,13 @@ displayImage image =
 
 
 type Msg
-    = One
-    | Two
-    | WindowWidth Int
+    = WindowWidth Int
     | ToggleDropdown Int Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        One ->
-            ( { model | tmp = "Mr Obama?" }
-            , Cmd.none
-            )
-
-        Two ->
-            ( { model | tmp = "Hewwo!" }
-            , Cmd.none
-            )
-
         WindowWidth x ->
             ( { model | gallery = updateWidth x model.gallery }, Cmd.none )
 
