@@ -9,7 +9,7 @@ module Main exposing (main)
 
 -}
 
-import Html exposing (Attribute, Html, a, article, button, div, footer, h1, h2, h3, header, img, li, nav, p, program, section, span, text, ul)
+import Html exposing (Attribute, Html, a, article, button, div, footer, h1, h2, h3, h4, header, img, li, nav, p, program, section, span, text, ul)
 import Html.Attributes exposing (class, href, rel, src, title)
 import Array exposing (Array)
 import Dropdown exposing (ToggleEvent(..), drawer, dropdown, toggle)
@@ -70,13 +70,26 @@ type alias Gallery =
     { title : String
     , description : String
     , columns : Int
-    , images : List GalleryImage
+    , images : List GalleryItem
     }
+
+
+type GalleryItem
+    = Image GalleryImage
+    | Project GalleryProject
 
 
 type alias GalleryImage =
     { url : String
     , mouseoverText : String
+    }
+
+
+type alias GalleryProject =
+    { url : String
+    , mouseoverText : String
+    , title : String
+    , description : String
     }
 
 
@@ -118,20 +131,76 @@ init =
             initGallery
                 "Gallery"
                 "Here are some pictures I've taken"
-                [ image "/assets/images/gallery01.jpg" "woah"
-                , image "/assets/images/gallery02.png" "hey"
-                , image "/assets/images/gallery03.png" "why"
-                , image "/assets/images/gallery04.png" "pls"
-                , image "/assets/images/gallery05.png" "i cant"
-                , image "/assets/images/gallery06.png" "stop"
-                , image "/assets/images/gallery07.jpg" "making"
-                , image "/assets/images/gallery08.png" "this"
-                , image "/assets/images/gallery09.jpg" "website"
-                , image "/assets/images/gallery10.png" "dear"
-                , image "/assets/images/gallery11.png" "god"
-                , image "/assets/images/gallery12.png" "help"
-                , image "/assets/images/gallery13.png" "me"
-                , image "/assets/images/gallery14.png" "aaaaa"
+                [ galleryProject
+                    "/assets/images/gallery01.jpg"
+                    "Some mouseover text for your convenience"
+                    "Image 1"
+                    "Natani and Kathrine share an intimate moment with each other because they are both really gay except Natani is a boy who likes boys so that's a different gay"
+                , galleryProject
+                    "/assets/images/gallery02.png"
+                    "Another image with mouseover text"
+                    "Image 2"
+                    "Kathrine is an IT Professional"
+                , galleryProject
+                    "/assets/images/gallery03.png"
+                    "Mouseover text is neat, right?"
+                    "Image 3"
+                    "Kieth doesn't want to go streaking"
+                , galleryProject
+                    "/assets/images/gallery04.png"
+                    "Mouseover text is weird tho"
+                    "Image 4"
+                    "Natani relaxes in the water"
+                , galleryProject
+                    "/assets/images/gallery05.png"
+                    "I don't like mouseover text"
+                    "Image 5"
+                    "Flora chills out in some water"
+                , galleryProject
+                    "/assets/images/gallery06.png"
+                    "Mouseover text should go away"
+                    "Image 6"
+                    "Flora licks her leg seductively"
+                , galleryProject
+                    "/assets/images/gallery07.jpg"
+                    "Mouseover text is banned"
+                    "Image 7"
+                    "Ember is flying"
+                , galleryProject
+                    "/assets/images/gallery08.png"
+                    ""
+                    "Image 8"
+                    "Some dragon is being maybe lewd"
+                , galleryProject
+                    "/assets/images/gallery09.jpg"
+                    ""
+                    "Image 9"
+                    "Kathrine struggles with Christmas Lights"
+                , galleryProject
+                    "/assets/images/gallery10.png"
+                    "Okay I lied I like mouseover text"
+                    "Image 10"
+                    "Kathrine relaxes beneath a tree"
+                , galleryProject
+                    "/assets/images/gallery11.png"
+                    "See, mouseover text is good, actually."
+                    "Image 11"
+                    "Flora and a friend play some late-night videogames"
+                , galleryProject
+                    "/assets/images/gallery12.png"
+                    "Hey Ma, look! Mouseover text!"
+                    "Image 12"
+                    "Flora is an IT Professional"
+                , galleryProject
+                    "/assets/images/gallery13.png"
+                    "This text appears when you mouse over the image"
+                    "Image 13"
+                    "Flora stole Trace's boxers. Oh no!"
+                , galleryProject
+                    "/assets/images/gallery14.png"
+                    "Can you make mouseover text? Click here to find out!"
+                    "Image 14"
+                    "Raine, Kathrine, and Flora hang out at the beach"
                 ]
       , footer =
             [ initFooterSection
@@ -200,12 +269,17 @@ welcomeBanner title description =
     { title = title, description = description }
 
 
-image : String -> String -> GalleryImage
-image url text =
-    { url = url, mouseoverText = text }
+galleryImage : String -> String -> GalleryItem
+galleryImage url text =
+    Image { url = url, mouseoverText = text }
 
 
-initGallery : String -> String -> List GalleryImage -> Gallery
+galleryProject : String -> String -> String -> String -> GalleryItem
+galleryProject url text title description =
+    Project { url = url, mouseoverText = text, title = title, description = description }
+
+
+initGallery : String -> String -> List GalleryItem -> Gallery
 initGallery title description images =
     { title = title, description = description, columns = 4, images = images }
 
@@ -344,7 +418,7 @@ dropdownConfig config =
 gallery : Gallery -> Html Msg
 gallery gallery =
     let
-        arr : Array (List GalleryImage)
+        arr : Array (List GalleryItem)
         arr =
             gallery.images
                 |> List.indexedMap (\index item -> ( index, item ))
@@ -385,12 +459,26 @@ gallery gallery =
             ]
 
 
-displayImage : GalleryImage -> Html Msg
-displayImage image =
-    article [ class "gallery-image" ]
-        [ div [ class "gallery-image-wrapper" ]
-            [ img [ src image.url, title image.mouseoverText ] [] ]
-        ]
+displayImage : GalleryItem -> Html Msg
+displayImage item =
+    case item of
+        Image image ->
+            article [ class "gallery-image" ]
+                [ div [ class "gallery-image-wrapper" ]
+                    [ img [ src image.url, title image.mouseoverText ] []
+                    ]
+                ]
+
+        Project project ->
+            article [ class "gallery-image" ]
+                [ div [ class "gallery-image-wrapper" ]
+                    [ img [ src project.url, title project.mouseoverText ] []
+                    , div [ class "gallery-image-info" ]
+                        [ h4 [] [ text project.title ]
+                        , p [] [ text project.description ]
+                        ]
+                    ]
+                ]
 
 
 footerSection : FooterSection -> Html Msg
