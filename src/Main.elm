@@ -132,72 +132,72 @@ init =
                 "Gallery"
                 "Here are some pictures I've taken"
                 [ galleryProject
-                    "/assets/images/gallery01.jpg"
+                    (imagePath "gallery01.jpg")
                     "Some mouseover text for your convenience"
                     "Image 1"
                     "Natani and Kathrine share an intimate moment with each other because they are both really gay except Natani is a boy who likes boys so that's a different gay"
                 , galleryProject
-                    "/assets/images/gallery02.png"
+                    (imagePath "gallery02.png")
                     "Another image with mouseover text"
                     "Image 2"
                     "Kathrine is an IT Professional"
                 , galleryProject
-                    "/assets/images/gallery03.png"
+                    (imagePath "gallery03.png")
                     "Mouseover text is neat, right?"
                     "Image 3"
                     "Kieth doesn't want to go streaking"
                 , galleryProject
-                    "/assets/images/gallery04.png"
+                    (imagePath "gallery04.png")
                     "Mouseover text is weird tho"
                     "Image 4"
                     "Natani relaxes in the water"
                 , galleryProject
-                    "/assets/images/gallery05.png"
+                    (imagePath "gallery05.png")
                     "I don't like mouseover text"
                     "Image 5"
                     "Flora chills out in some water"
                 , galleryProject
-                    "/assets/images/gallery06.png"
+                    (imagePath "gallery06.png")
                     "Mouseover text should go away"
                     "Image 6"
                     "Flora licks her leg seductively"
                 , galleryProject
-                    "/assets/images/gallery07.jpg"
+                    (imagePath "gallery07.jpg")
                     "Mouseover text is banned"
                     "Image 7"
                     "Ember is flying"
                 , galleryProject
-                    "/assets/images/gallery08.png"
+                    (imagePath "gallery08.png")
                     ""
                     "Image 8"
                     "Some dragon is being maybe lewd"
                 , galleryProject
-                    "/assets/images/gallery09.jpg"
+                    (imagePath "gallery09.jpg")
                     ""
                     "Image 9"
                     "Kathrine struggles with Christmas Lights"
                 , galleryProject
-                    "/assets/images/gallery10.png"
+                    (imagePath "gallery10.png")
                     "Okay I lied I like mouseover text"
                     "Image 10"
                     "Kathrine relaxes beneath a tree"
                 , galleryProject
-                    "/assets/images/gallery11.png"
+                    (imagePath "gallery11.png")
                     "See, mouseover text is good, actually."
                     "Image 11"
                     "Flora and a friend play some late-night videogames"
                 , galleryProject
-                    "/assets/images/gallery12.png"
+                    (imagePath "gallery12.png")
                     "Hey Ma, look! Mouseover text!"
                     "Image 12"
                     "Flora is an IT Professional"
                 , galleryProject
-                    "/assets/images/gallery13.png"
+                    (imagePath "gallery13.png")
                     "This text appears when you mouse over the image"
                     "Image 13"
                     "Flora stole Trace's boxers. Oh no!"
                 , galleryProject
-                    "/assets/images/gallery14.png"
+                    (imagePath "gallery14.png")
                     "Can you make mouseover text? Click here to find out!"
                     "Image 14"
                     "Raine, Kathrine, and Flora hang out at the beach"
@@ -222,6 +222,11 @@ init =
       }
     , Task.perform WindowWidth Window.width
     )
+
+
+imagePath : String -> String
+imagePath filename =
+    "/assets/images/" ++ filename
 
 
 defaultDropdownConfig : DropdownConfig
