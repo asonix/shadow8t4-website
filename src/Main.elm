@@ -530,14 +530,18 @@ displayImage item =
         Image image ->
             article [ class "gallery-image" ]
                 [ div [ class "gallery-image-wrapper" ]
-                    [ img [ src image.url, title image.mouseoverText ] []
+                    [ a [ href image.url ]
+                        [ img [ src image.url, title image.mouseoverText ] []
+                        ]
                     ]
                 ]
 
         Project project ->
             article [ class "gallery-image" ]
                 [ div [ class "gallery-image-wrapper" ]
-                    [ img [ src project.url, title project.mouseoverText ] []
+                    [ a [ href project.url ]
+                        [ img [ src project.url, title project.mouseoverText ] []
+                        ]
                     , div [ class "gallery-image-info" ]
                         [ h4 [] [ text project.title ]
                         , p [] [ text project.description ]
