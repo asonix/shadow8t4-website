@@ -226,10 +226,7 @@ nav {
     z-index: 0;
     height: 100vh;
     max-height: 500px;
-}
-
-.welcome .welcome-wrapper {
-    padding-top: 51px;
+    margin-top: 51px;
 }
 
 .welcome .dimmer {
