@@ -153,72 +153,72 @@ init flags =
                 "Gallery"
                 "Here are some pictures I've taken"
                 [ galleryProject
-                    (imagePath "gallery01.jpg")
+                    "gallery01.png"
                     "Some mouseover text for your convenience"
                     "Image 1"
                     "Natani and Kathrine share an intimate moment with each other because they are both really gay except Natani is a boy who likes boys so that's a different gay"
                 , galleryProject
-                    (imagePath "gallery02.png")
+                    "gallery02.png"
                     "Another image with mouseover text"
                     "Image 2"
                     "Kathrine is an IT Professional"
                 , galleryProject
-                    (imagePath "gallery03.png")
+                    "gallery03.png"
                     "Mouseover text is neat, right?"
                     "Image 3"
                     "Kieth doesn't want to go streaking"
                 , galleryProject
-                    (imagePath "gallery04.png")
+                    "gallery04.png"
                     "Mouseover text is weird tho"
                     "Image 4"
                     "Natani relaxes in the water"
                 , galleryProject
-                    (imagePath "gallery05.png")
+                    "gallery05.png"
                     "I don't like mouseover text"
                     "Image 5"
                     "Flora chills out in some water"
                 , galleryProject
-                    (imagePath "gallery06.png")
+                    "gallery06.png"
                     "Mouseover text should go away"
                     "Image 6"
                     "Flora licks her leg seductively"
                 , galleryProject
-                    (imagePath "gallery07.jpg")
+                    "gallery07.png"
                     "Mouseover text is banned"
                     "Image 7"
                     "Ember is flying"
                 , galleryProject
-                    (imagePath "gallery08.png")
+                    "gallery08.png"
                     ""
                     "Image 8"
                     "Some dragon is being maybe lewd"
                 , galleryProject
-                    (imagePath "gallery09.jpg")
+                    "gallery09.png"
                     ""
                     "Image 9"
                     "Kathrine struggles with Christmas Lights"
                 , galleryProject
-                    (imagePath "gallery10.png")
+                    "gallery10.png"
                     "Okay I lied I like mouseover text"
                     "Image 10"
                     "Kathrine relaxes beneath a tree"
                 , galleryProject
-                    (imagePath "gallery11.png")
+                    "gallery11.png"
                     "See, mouseover text is good, actually."
                     "Image 11"
                     "Flora and a friend play some late-night videogames"
                 , galleryProject
-                    (imagePath "gallery12.png")
+                    "gallery12.png"
                     "Hey Ma, look! Mouseover text!"
                     "Image 12"
                     "Flora is an IT Professional"
                 , galleryProject
-                    (imagePath "gallery13.png")
+                    "gallery13.png"
                     "This text appears when you mouse over the image"
                     "Image 13"
                     "Flora stole Trace's boxers. Oh no!"
                 , galleryProject
-                    (imagePath "gallery14.png")
+                    "gallery14.png"
                     "Can you make mouseover text? Click here to find out!"
                     "Image 14"
                     "Raine, Kathrine, and Flora hang out at the beach"
@@ -245,9 +245,14 @@ init flags =
     )
 
 
-imagePath : String -> String
-imagePath filename =
-    "/assets/images/" ++ filename
+smallImagePath : String -> String
+smallImagePath filename =
+    "/assets/images/420/" ++ filename
+
+
+fullImagePath : String -> String
+fullImagePath filename =
+    "/assets/images/full/" ++ filename
 
 
 defaultDropdownConfig : DropdownConfig
@@ -530,8 +535,8 @@ displayImage item =
         Image image ->
             article [ class "gallery-image" ]
                 [ div [ class "gallery-image-wrapper" ]
-                    [ a [ href image.url ]
-                        [ img [ src image.url, title image.mouseoverText ] []
+                    [ a [ href (fullImagePath image.url) ]
+                        [ img [ src (smallImagePath image.url), title image.mouseoverText ] []
                         ]
                     ]
                 ]
@@ -539,8 +544,8 @@ displayImage item =
         Project project ->
             article [ class "gallery-image" ]
                 [ div [ class "gallery-image-wrapper" ]
-                    [ a [ href project.url ]
-                        [ img [ src project.url, title project.mouseoverText ] []
+                    [ a [ href (fullImagePath project.url) ]
+                        [ img [ src (smallImagePath project.url), title project.mouseoverText ] []
                         ]
                     , div [ class "gallery-image-info" ]
                         [ h4 [] [ text project.title ]
