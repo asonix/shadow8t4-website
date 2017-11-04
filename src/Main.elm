@@ -447,10 +447,11 @@ navDropdown name config items =
             config.state
             (dropdownConfig config)
             (toggle div
-                (if config.state then
-                    [ class "dropdown-active", class "button-wrapper" ]
-                 else
-                    [ class "button-wrapper" ]
+                ([ class "button-wrapper" ]
+                    ++ if config.state then
+                        [ class "dropdown-active" ]
+                       else
+                        []
                 )
                 [ p []
                     [ text name
@@ -518,11 +519,7 @@ gallery gallery =
                     ]
                 , div [ class "gallery-columns" ]
                     (arr
-                        |> Array.map
-                            (\x ->
-                                div [ class "gallery-column" ]
-                                    (x |> List.reverse |> List.map displayImage)
-                            )
+                        |> Array.map (div [ class "gallery-column" ] << List.map displayImage << List.reverse)
                         |> Array.toList
                     )
                 ]

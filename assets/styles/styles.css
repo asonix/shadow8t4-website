@@ -285,10 +285,11 @@ nav {
 
 .gallery .gallery-column {
     margin: 0 auto;
+    flex: 1;
+    max-width: 465px;
 }
 
 .gallery .gallery-image {
-    max-width: 400px;
     margin: 1em 0.5em;
 }
 
@@ -301,6 +302,7 @@ nav {
 .gallery .gallery-image img {
     display: block;
     width: 100%;
+    max-width: 420px;
 }
 
 footer {
