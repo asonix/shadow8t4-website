@@ -9,8 +9,9 @@ module Main exposing (main)
 
 -}
 
-import Html exposing (Attribute, Html, a, article, button, div, footer, h1, h2, h3, h4, header, img, li, nav, p, program, section, span, text, ul)
+import Html exposing (Attribute, Html, a, article, button, div, footer, h1, h2, h3, h4, header, img, li, nav, p, programWithFlags, section, span, text, ul)
 import Html.Attributes exposing (class, href, rel, src, title)
+import Html.Events exposing (onClick)
 import Array exposing (Array)
 import Dropdown exposing (ToggleEvent(..), drawer, dropdown, toggle)
 import Window exposing (resizes, width)
@@ -22,9 +23,9 @@ import Task exposing (perform)
 
 {-| The main function of the application
 -}
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    program
+    programWithFlags
         { init = init
         , view = view
         , update = update
@@ -37,10 +38,19 @@ main =
 
 
 type alias Model =
-    { nav : Array NavItem
+    { flags : Flags
+    , nav : Navigation
     , welcome : WelcomeBanner
     , gallery : Gallery
     , footer : List FooterSection
+    }
+
+
+type alias Navigation =
+    { smallNav : Bool
+    , showNav : Bool
+    , navText : String
+    , items : Array NavItem
     }
 
 
@@ -101,31 +111,42 @@ type alias FooterSection =
     }
 
 
+type alias Flags =
+    { mobile : Bool
+    }
+
+
 
 -- INIT
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( { nav =
-            initDropdowns
-                [ HomeLink "Home" "/"
-                , InitDropdown
-                    "Social Media"
-                    (initDropdowns
-                        [ NavLink "Tumblr" "https://shadow8t4.tumblr.com"
-                        , NavLink "Facebook" "https://facebook.com/shadow8t3"
-                        , NavLink "Mastodon" "https://asonix.dog/@shadow8t4"
-                        , NavLink "YouTube" "https://www.youtube.com/channel/UCZAXVnn6i1hcgDjV93HPbzg"
-                        , NavLink "Instagram" "https://instagram.com/shadow8t4"
-                        , NavLink "Google+" "https://plus.google.com/u/2/118253409016956205819"
-                        ]
-                    )
-                , NavLink "AskBox" "https://shadow8t4.tumblr.com/ask"
-                , NavLink "Submit" "https://shadow8t4.tumblr.ccom/submit"
-                , NavLink "Me" "https://shadow8t4.tumblr.com/tagged/me"
-                , NavLink "Revival Survival" "/revival-survival"
-                ]
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { flags = flags
+      , nav =
+            { showNav = False
+            , smallNav = False
+            , navText = "Navigation"
+            , items =
+                initDropdowns
+                    [ HomeLink "Home" "/"
+                    , InitDropdown
+                        "Social Media"
+                        (initDropdowns
+                            [ NavLink "Tumblr" "https://shadow8t4.tumblr.com"
+                            , NavLink "Facebook" "https://facebook.com/shadow8t3"
+                            , NavLink "Mastodon" "https://asonix.dog/@shadow8t4"
+                            , NavLink "YouTube" "https://www.youtube.com/channel/UCZAXVnn6i1hcgDjV93HPbzg"
+                            , NavLink "Instagram" "https://instagram.com/shadow8t4"
+                            , NavLink "Google+" "https://plus.google.com/u/2/118253409016956205819"
+                            ]
+                        )
+                    , NavLink "AskBox" "https://shadow8t4.tumblr.com/ask"
+                    , NavLink "Submit" "https://shadow8t4.tumblr.ccom/submit"
+                    , NavLink "Me" "https://shadow8t4.tumblr.com/tagged/me"
+                    , NavLink "Revival Survival" "/revival-survival"
+                    ]
+            }
       , welcome = welcomeBanner "Welcome" "What are frogs tho"
       , gallery =
             initGallery
@@ -233,7 +254,7 @@ defaultDropdownConfig : DropdownConfig
 defaultDropdownConfig =
     { name = "dropdown1"
     , event = OnClick
-    , attribute = class "dropdown"
+    , attribute = class "dropdown-active"
     , state = False
     , message = ToggleDropdown 0
     }
@@ -286,7 +307,7 @@ galleryProject url text title description =
 
 initGallery : String -> String -> List GalleryItem -> Gallery
 initGallery title description images =
-    { title = title, description = description, columns = 4, images = images }
+    { title = title, description = description, columns = 1, images = images }
 
 
 initFooterSection : String -> String -> String -> String -> FooterSection
@@ -326,9 +347,48 @@ welcome banner =
 
 headerBar : Model -> Html Msg
 headerBar model =
-    header []
-        [ nav []
-            [ ul [] (Array.map navItem model.nav |> Array.toList)
+    if model.flags.mobile || model.nav.smallNav then
+        mobileHeaderbar model
+    else
+        desktopHeaderBar model
+
+
+desktopHeaderBar : Model -> Html Msg
+desktopHeaderBar model =
+    header [ class "desktop-header" ]
+        [ nav [ class "desktop-nav" ]
+            [ div [ class "desktop-nav-wrapper", class "nav-wrapper" ]
+                [ ul [] (Array.map navItem model.nav.items |> Array.toList)
+                ]
+            ]
+        ]
+
+
+mobileHeaderbar : Model -> Html Msg
+mobileHeaderbar model =
+    header [ class "mobile-header" ]
+        [ div
+            ([ class "show-nav", onClick (ToggleNav (not model.nav.showNav)) ]
+                ++ if model.nav.showNav then
+                    [ class "active" ]
+                   else
+                    []
+            )
+            [ p []
+                [ text model.nav.navText
+                , span [ class "carat" ] []
+                ]
+            ]
+        , nav
+            ([ class "mobile-nav" ]
+                ++ if model.nav.showNav then
+                    []
+                   else
+                    [ class "hidden" ]
+            )
+            [ div [ class "mobile-nav-wrapper", class "nav-wrapper" ]
+                [ ul [] (Array.map navItem model.nav.items |> Array.toList)
+                ]
             ]
         ]
 
@@ -514,23 +574,41 @@ footerSections items =
 type Msg
     = WindowWidth Int
     | ToggleDropdown Int Bool
+    | ToggleNav Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         WindowWidth x ->
-            ( { model | gallery = updateWidth x model.gallery }, Cmd.none )
+            ( { model
+                | gallery = updateGalleryWidth model.flags.mobile x model.gallery
+                , nav = updateNavWidth x model.nav
+              }
+            , Cmd.none
+            )
 
         ToggleDropdown index state ->
             ( { model | nav = updateDropdown index state model.nav }
             , Cmd.none
             )
 
+        ToggleNav state ->
+            ( { model | nav = toggleNav state model.nav }
+            , Cmd.none
+            )
 
-updateWidth : Int -> Gallery -> Gallery
-updateWidth width gallery =
-    if width < 632 then
+
+toggleNav : Bool -> Navigation -> Navigation
+toggleNav state nav =
+    { nav | showNav = state }
+
+
+updateGalleryWidth : Bool -> Int -> Gallery -> Gallery
+updateGalleryWidth mobile width gallery =
+    if mobile then
+        gallery
+    else if width < 632 then
         { gallery | columns = 1 }
     else if width < 932 then
         { gallery | columns = 2 }
@@ -538,19 +616,27 @@ updateWidth width gallery =
         { gallery | columns = 3 }
 
 
-updateDropdown : Int -> Bool -> Array NavItem -> Array NavItem
-updateDropdown index state navArray =
-    case Array.get index navArray of
+updateNavWidth : Int -> Navigation -> Navigation
+updateNavWidth width nav =
+    if width < 700 then
+        { nav | smallNav = True }
+    else
+        { nav | smallNav = False, showNav = False }
+
+
+updateDropdown : Int -> Bool -> Navigation -> Navigation
+updateDropdown index state nav =
+    case Array.get index nav.items of
         Just dropdown ->
             case dropdown of
                 (Dropdown name config items) as dropdown ->
-                    Array.set index (Dropdown name { config | state = state } items) navArray
+                    { nav | items = Array.set index (Dropdown name { config | state = state } items) nav.items }
 
                 _ ->
-                    navArray
+                    nav
 
         Nothing ->
-            navArray
+            nav
 
 
 
