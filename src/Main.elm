@@ -87,6 +87,7 @@ type alias Gallery =
 type GalleryItem
     = Image GalleryImage
     | Project GalleryProject
+    | ProjectLink GalleryLink
 
 
 type alias GalleryImage =
@@ -99,7 +100,16 @@ type alias GalleryProject =
     { url : String
     , mouseoverText : String
     , title : String
-    , description : String
+    , description : List String
+    }
+
+
+type alias GalleryLink =
+    { url : String
+    , mouseoverText : String
+    , title : String
+    , description : List String
+    , links : List ( String, String )
     }
 
 
@@ -133,112 +143,152 @@ init flags =
                     , InitDropdown
                         "Social Media"
                         (initDropdowns
-                            [ NavLink "Tumblr" "https://shadow8t4.tumblr.com"
-                            , NavLink "Facebook" "https://facebook.com/shadow8t3"
+                            [ NavLink "Facebook" "https://facebook.com/shadow8t3"
                             , NavLink "Mastodon" "https://asonix.dog/@shadow8t4"
                             , NavLink "YouTube" "https://www.youtube.com/channel/UCZAXVnn6i1hcgDjV93HPbzg"
-                            , NavLink "Instagram" "https://instagram.com/shadow8t4"
                             , NavLink "Google+" "https://plus.google.com/u/2/118253409016956205819"
                             ]
                         )
-                    , NavLink "AskBox" "https://shadow8t4.tumblr.com/ask"
-                    , NavLink "Submit" "https://shadow8t4.tumblr.ccom/submit"
-                    , NavLink "Me" "https://shadow8t4.tumblr.com/tagged/me"
-                    , NavLink "Revival Survival" "/revival-survival"
+                    , InitDropdown
+                        "Project Links"
+                        (initDropdowns
+                            [ NavLink "Revival Survival" "/revival-survival"
+                            , NavLink "So Bow-y Cute" "https://double-darling-duo-deluxe.itch.io/so-bow-y-cute"
+                            , NavLink "Project Undercover" "https://github.tamu.edu/jrdoli/dream-machine"
+                            , NavLink "Procedural City" "https://github.tamu.edu/shadow8t4/ProceduralCity"
+                            , NavLink "PSVR Github" "https://github.com/k4sr4/PublicSpeaking-VR"
+                            , NavLink "PSVR Research Paper" "/assets/other/Public_Speaking_in_VR_Research_Paper.pdf"
+                            ]
+                        )
                     ]
             }
-      , welcome = welcomeBanner "Welcome" "What are frogs tho"
+      , welcome = welcomeBanner "Werefox Software" "A portfolio site"
       , gallery =
             initGallery
-                "Gallery"
-                "Here are some pictures I've taken"
-                [ galleryProject
-                    "gallery01.png"
-                    "Some mouseover text for your convenience"
-                    "Image 1"
-                    "Natani and Kathrine share an intimate moment with each other because they are both really gay except Natani is a boy who likes boys so that's a different gay"
+                "Portfolio Gallery"
+                "Here's just a few project's I've worked on either personally or through school."
+                [ galleryLink
+                    "projectundercover-guard.png"
+                    "The guard's view in ProjectUndercover."
+                    "ProjectUndercover - guard view"
+                    [ "Project Undercover is a game about pretending to be an AI. Or at least -- that's part of it."
+                        ++ " Players will compete against one another, with one side trying to blend in with a crowd"
+                        ++ " of non-player characters, and the other side attempting to identify them. It takes place"
+                        ++ " at a party, and the undercover players are agents trying to infiltrate and complete"
+                        ++ " several missions before the guard, or overseer, catches them."
+                    , "The overseer is limited"
+                        ++ " by a set of cameras, and slowly receives information over the course of the game to"
+                        ++ " help identify the agents, thus putting the heat on them."
+                    , "This picture is from the perspective of one of the guard's cameras."
+                    ]
+                    [ ( "Github Link"
+                      , "https://github.tamu.edu/jrdoli/dream-machine"
+                      )
+                    ]
+                , galleryLink
+                    "procedural-city.png"
+                    "A picture of some output from ProceduralCity"
+                    "Procedural City"
+                    [ "In this project my partner, Jeremy Martin, and I presented a way of procedurally generating a basic city by"
+                        ++ " creating an .obj mesh file using some given template meshes. The goal was that when given a"
+                        ++ " user input population density and some template meshes, the program would output"
+                        ++ " a resulting mesh of a procedurally generated “city” using the template"
+                        ++ " meshes along with some defined rules. The program takes the input files and duplicates it at"
+                        ++ " procedurally determined intersections, creating a basic city structure in the"
+                        ++ " resulting output .obj mesh file."
+                    , " Unfortunately, the program was unable to be fully"
+                        ++ " completed before our deadline, and currently takes one input mesh file and duplicates it"
+                        ++ " based on user-defined amounts of layers from a central point with user-defined spacing."
+                    , "Specific documentation on how to operate the program is detailed on the respective github page."
+                    ]
+                    [ ( "Github Link"
+                      , "https://github.tamu.edu/shadow8t4/ProceduralCity"
+                      )
+                    ]
+                , galleryLink
+                    "public-speaking-vr.png"
+                    "A Case Study on Public Speaking in Virtual Reality."
+                    "Public Speaking in VR"
+                    [ "In this project, and the resulting research paper, a group I was assigned in and I show the results of"
+                        ++ " a case study on the effectiveness and realism of using Virtual Reality technology to simulate the"
+                        ++ " experience of public speaking in an effort to practice one’s speech skills."
+                    , "We used a Development"
+                        ++ " Kit 2 version of the Oculus Rift and the Unity editor to create and run our simulation. In the"
+                        ++ " simulation, we presented users a large classroom environment with a handful of characters to"
+                        ++ " present a mock speech in front of. We provided the users with an Xbox game controller to allow"
+                        ++ " for easier camera movement as well as a way to switch through the given slides in the mock presentation."
+                    , "The resulting research paper from the case study and a link to the project's github page can be found"
+                        ++ " below."
+                    ]
+                    [ ( "Github Link"
+                      , "https://github.com/k4sr4/PublicSpeaking-VR"
+                      )
+                    , ( "Research Paper"
+                      , "/assets/other/Public_Speaking_in_VR_Research_Paper.pdf"
+                      )
+                    ]
                 , galleryProject
-                    "gallery02.png"
-                    "Another image with mouseover text"
-                    "Image 2"
-                    "Kathrine is an IT Professional"
-                , galleryProject
-                    "gallery03.png"
-                    "Mouseover text is neat, right?"
-                    "Image 3"
-                    "Kieth doesn't want to go streaking"
-                , galleryProject
-                    "gallery04.png"
-                    "Mouseover text is weird tho"
-                    "Image 4"
-                    "Natani relaxes in the water"
-                , galleryProject
-                    "gallery05.png"
-                    "I don't like mouseover text"
-                    "Image 5"
-                    "Flora chills out in some water"
-                , galleryProject
-                    "gallery06.png"
-                    "Mouseover text should go away"
-                    "Image 6"
-                    "Flora licks her leg seductively"
-                , galleryProject
-                    "gallery07.png"
-                    "Mouseover text is banned"
-                    "Image 7"
-                    "Ember is flying"
-                , galleryProject
-                    "gallery08.png"
-                    ""
-                    "Image 8"
-                    "Some dragon is being maybe lewd"
-                , galleryProject
-                    "gallery09.png"
-                    ""
-                    "Image 9"
-                    "Kathrine struggles with Christmas Lights"
-                , galleryProject
-                    "gallery10.png"
-                    "Okay I lied I like mouseover text"
-                    "Image 10"
-                    "Kathrine relaxes beneath a tree"
-                , galleryProject
-                    "gallery11.png"
-                    "See, mouseover text is good, actually."
-                    "Image 11"
-                    "Flora and a friend play some late-night videogames"
-                , galleryProject
-                    "gallery12.png"
-                    "Hey Ma, look! Mouseover text!"
-                    "Image 12"
-                    "Flora is an IT Professional"
-                , galleryProject
-                    "gallery13.png"
-                    "This text appears when you mouse over the image"
-                    "Image 13"
-                    "Flora stole Trace's boxers. Oh no!"
-                , galleryProject
-                    "gallery14.png"
-                    "Can you make mouseover text? Click here to find out!"
-                    "Image 14"
-                    "Raine, Kathrine, and Flora hang out at the beach"
+                    "projectundercover-spy.png"
+                    "A spy's view in ProjectUndercover."
+                    "Project Undercover - spy view"
+                    [ "This is another picture from Project Undercover, this time from the perspective"
+                        ++ " of a spy. In this picture, the spy is finishing a waving interaction with an AI spy."
+                    ]
+                , galleryLink
+                    "revival-survival.png"
+                    "A game where you save a soul you accidentally reaped as the grim reaper."
+                    "Revival Survival"
+                    [ "This was my entry for Chillennium 2017, a game jam held and hosted by students at Texas A&M."
+                        ++ " I was in a group with 3 other students, and mostly worked on the sound design and"
+                        ++ " game mechanics from the game. The game was made using Unity."
+                    , "In Revival Survival, you play as the Grim Reaper in a 2D platformer that has to return"
+                        ++ " the soul of someone they accidentally reaped. Throughout the game you are met with"
+                        ++ " adversaries - hellhounds that want to eat the soul you reaped and paladins who wish to avenge"
+                        ++ " that soul you reaped."
+                    , "You can find a link to play this game in browser on the nav bar at the top of this page, as well"
+                        ++ " as the link below. I've also provided a link to the itch.io submission page, where you"
+                        ++ " can download a Windows standalone copy of the game."
+                    ]
+                    [ ( "itch.io Page Link"
+                      , "https://d4-team.itch.io/revival-survival"
+                      )
+                    , ( "In-browser Game Link"
+                      , "/revival-survival"
+                      )
+                    ]
+                , galleryLink
+                    "so-bow-y-cute.png"
+                    "A game where you become cute."
+                    "So Bow-y Cute"
+                    [ "This was my entry for Chillennium 2016, a game jam held and hosted by students at Texas A&M."
+                        ++ " This was my first time at the game jam and I was randomly patnered with one other person,"
+                        ++ " who did the art for this game. Everything else was done by me. The game was made using Unity."
+                    , "In So Bow-y Cute - When your parent decides to limit you cuteness potential by prohibiting all bows, you must"
+                        ++ " rebel against their tyranny and become the cutest you possibly can. Be careful not to get"
+                        ++ " caught! or else you're out of luck."
+                    , "You can find a link to the itch.io page below."
+                    ]
+                    [ ( "itch.io Page Link"
+                      , "https://double-darling-duo-deluxe.itch.io/so-bow-y-cute"
+                      )
+                    ]
                 ]
       , footer =
             [ initFooterSection
-                "Video Games"
-                "I have an extensive collection and hope to someday go into design maybe."
-                "This link is useless"
+                ""
+                ""
+                ""
                 "/"
             , initFooterSection
-                "Programming"
-                "I really love to program, probably one of my favorite hobbies, and hopefully someday I'll make it part of my career."
-                "So is this one"
+                ""
+                ""
+                ""
                 "/"
             , initFooterSection
-                "Music"
-                "\"Music is my life\" is such a 90's thing to say, but it's still true. Wish I could make more time for it."
-                "MEMES THO???"
-                "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                ""
+                ""
+                ""
+                "/"
             ]
       }
     , Task.perform WindowWidth Window.width
@@ -305,9 +355,14 @@ galleryImage url text =
     Image { url = url, mouseoverText = text }
 
 
-galleryProject : String -> String -> String -> String -> GalleryItem
+galleryProject : String -> String -> String -> List String -> GalleryItem
 galleryProject url text title description =
     Project { url = url, mouseoverText = text, title = title, description = description }
+
+
+galleryLink : String -> String -> String -> List String -> List ( String, String ) -> GalleryItem
+galleryLink url text title description links =
+    ProjectLink { url = url, mouseoverText = text, title = title, description = description, links = links }
 
 
 initGallery : String -> String -> List GalleryItem -> Gallery
@@ -546,7 +601,21 @@ displayImage item =
                         ]
                     , div [ class "gallery-image-info" ]
                         [ h4 [] [ text project.title ]
-                        , p [] [ text project.description ]
+                        , div [] (List.map (\t -> p [] [ text t ]) project.description)
+                        ]
+                    ]
+                ]
+
+        ProjectLink projectlink ->
+            article [ class "gallery-image" ]
+                [ div [ class "gallery-image-wrapper" ]
+                    [ a [ href (fullImagePath projectlink.url) ]
+                        [ img [ src (smallImagePath projectlink.url), title projectlink.mouseoverText ] []
+                        ]
+                    , div [ class "gallery-image-info" ]
+                        [ h4 [] [ text projectlink.title ]
+                        , div [] (List.map (\t -> p [] [ text t ]) projectlink.description)
+                        , p [] (List.map (\( t, url ) -> a [ href url ] [ text t ]) projectlink.links)
                         ]
                     ]
                 ]
