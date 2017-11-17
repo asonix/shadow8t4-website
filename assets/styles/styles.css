@@ -220,7 +220,7 @@ nav {
 .welcome {
     background-color: #444444;
     background-image: url('/assets/images/full/pexels-photo-258112.png');
-    background-attachment: fixed;
+    background-attachment: local;
     background-size: cover;
     position: relative;
     z-index: 0;
