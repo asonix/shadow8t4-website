@@ -155,7 +155,7 @@ init flags =
                             [ NavLink "Revival Survival" "/revival-survival"
                             , NavLink "So Bow-y Cute" "https://double-darling-duo-deluxe.itch.io/so-bow-y-cute"
                             , NavLink "Project Undercover" "https://github.tamu.edu/jrdoli/dream-machine"
-                            , NavLink "Procedural City" "https://github.tamu.edu/shadow8t4/ProceduralCity"
+                            , NavLink "Procedural City" "https://github.com/shadow8t4/ProceduralCity"
                             , NavLink "PSVR Github" "https://github.com/k4sr4/PublicSpeaking-VR"
                             , NavLink "PSVR Research Paper" "/assets/other/Public_Speaking_in_VR_Research_Paper.pdf"
                             ]
@@ -202,7 +202,7 @@ init flags =
                     , "Specific documentation on how to operate the program is detailed on the respective github page."
                     ]
                     [ ( "Github Link"
-                      , "https://github.tamu.edu/shadow8t4/ProceduralCity"
+                      , "https://github.com/shadow8t4/ProceduralCity"
                       )
                     ]
                 , galleryLink
