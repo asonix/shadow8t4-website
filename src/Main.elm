@@ -154,7 +154,8 @@ init flags =
                         (initDropdowns
                             [ NavLink "Revival Survival" "/revival-survival"
                             , NavLink "So Bow-y Cute" "https://double-darling-duo-deluxe.itch.io/so-bow-y-cute"
-                            , NavLink "Project Undercover" "https://github.tamu.edu/jrdoli/dream-machine"
+                            , NavLink "Project Undercover Github" "https://github.tamu.edu/jrdoli/dream-machine"
+                            , NavLink "Project Undercover WebGL" "/project-undercover"
                             , NavLink "Procedural City" "https://github.com/shadow8t4/ProceduralCity"
                             , NavLink "PSVR Github" "https://github.com/k4sr4/PublicSpeaking-VR"
                             , NavLink "PSVR Research Paper" "/assets/other/Public_Speaking_in_VR_Research_Paper.pdf"
@@ -227,12 +228,19 @@ init flags =
                       , "/assets/other/Public_Speaking_in_VR_Research_Paper.pdf"
                       )
                     ]
-                , galleryProject
+                , galleryLink
                     "projectundercover-spy.png"
                     "A spy's view in ProjectUndercover."
                     "Project Undercover - spy view"
                     [ "This is another picture from Project Undercover, this time from the perspective"
                         ++ " of a spy. In this picture, the spy is finishing a waving interaction with an AI spy."
+                    ]
+                    [ ( "Tamu Github Page Link"
+                      , "https://github.tamu.edu/jrdoli/dream-machine"
+                      )
+                    , ( "In-browser Game Link"
+                      , "/project-undercover"
+                      )
                     ]
                 , galleryLink
                     "revival-survival.png"
