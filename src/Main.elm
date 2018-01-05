@@ -182,7 +182,7 @@ init flags =
                         ++ " help identify the agents, thus putting the heat on them."
                     , "This picture is from the perspective of one of the guard's cameras."
                     ]
-                    [ ( "Github Link"
+                    [ ( "Github"
                       , "https://github.tamu.edu/jrdoli/dream-machine"
                       )
                     ]
@@ -202,7 +202,7 @@ init flags =
                         ++ " based on user-defined amounts of layers from a central point with user-defined spacing."
                     , "Specific documentation on how to operate the program is detailed on the respective github page."
                     ]
-                    [ ( "Github Link"
+                    [ ( "Github"
                       , "https://github.com/shadow8t4/ProceduralCity"
                       )
                     ]
@@ -221,7 +221,7 @@ init flags =
                     , "The resulting research paper from the case study and a link to the project's github page can be found"
                         ++ " below."
                     ]
-                    [ ( "Github Link"
+                    [ ( "Github"
                       , "https://github.com/k4sr4/PublicSpeaking-VR"
                       )
                     , ( "Research Paper"
@@ -235,10 +235,10 @@ init flags =
                     [ "This is another picture from Project Undercover, this time from the perspective"
                         ++ " of a spy. In this picture, the spy is finishing a waving interaction with an AI spy."
                     ]
-                    [ ( "Tamu Github Page Link"
+                    [ ( "Tamu Github"
                       , "https://github.tamu.edu/jrdoli/dream-machine"
                       )
-                    , ( "In-browser Game Link"
+                    , ( "In-browser Game"
                       , "/project-undercover"
                       )
                     ]
@@ -257,10 +257,10 @@ init flags =
                         ++ " as the link below. I've also provided a link to the itch.io submission page, where you"
                         ++ " can download a Windows standalone copy of the game."
                     ]
-                    [ ( "itch.io Page Link"
+                    [ ( "itch.io"
                       , "https://d4-team.itch.io/revival-survival"
                       )
-                    , ( "In-browser Game Link"
+                    , ( "In-browser Game"
                       , "/revival-survival"
                       )
                     ]
@@ -276,7 +276,7 @@ init flags =
                         ++ " caught! or else you're out of luck."
                     , "You can find a link to the itch.io page below."
                     ]
-                    [ ( "itch.io Page Link"
+                    [ ( "itch.io"
                       , "https://double-darling-duo-deluxe.itch.io/so-bow-y-cute"
                       )
                     ]
@@ -623,7 +623,7 @@ displayImage item =
                     , div [ class "gallery-image-info" ]
                         [ h4 [] [ text projectlink.title ]
                         , div [] (List.map (\t -> p [] [ text t ]) projectlink.description)
-                        , p [] (List.map (\( t, url ) -> a [ href url ] [ text t ]) projectlink.links)
+                        , div [] (List.map (\( t, url ) -> p [] [ a [ href url ] [ text t ] ]) projectlink.links)
                         ]
                     ]
                 ]
